@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<configuration>
+    <server>
+        <host>192.168.0.64</host>
+        <port>55095</port>
+        <service>KernelManager</service>
+        <maxConnections>555</maxConnections>
+    </server>
+    <core>
+        <data>
+            <encoding>cp1251</encoding>
+        </data>
+        <enq_receive_timeout>10</enq_receive_timeout>
+        <receive_timeout>10</receive_timeout>
+        <enquire_link_time>10</enquire_link_time>
+        <executorThreads>1000</executorThreads>
+        <prot>
+            <ver>16</ver>
+        </prot>
+        <sys>
+            <type></type>
+        </sys>
+    </core>
+    <sms>
+        <connection>
+            <debug>false</debug>
+        </connection>
+        <exp>
+            <exp1255>50</exp1255>
+            <exp1251>40</exp1251>
+        </exp>
+        <numbers>
+            <list>1255, 1251</list>
+        </numbers>
+        <ton>0</ton>
+        <npi>0</npi>
+        <bind>
+            <mode>tr</mode>
+        </bind>
+    </sms>
+</configuration>

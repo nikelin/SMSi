@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>sms</artifactId>
+        <groupId>ru.nikita.platform</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.nikita.platform.sms</groupId>
+    <artifactId>console</artifactId>
+    <version>${parent.version}</version>
+
+    <build>
+        <finalName>console</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>ru.nikita.platform.sms.console.App</mainClass>
+                    <arguments>
+                        <argument>src/main/resources/context.xml</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <artifactId>ascript</artifactId>
+            <groupId>com.redshape</groupId>
+            <version>${as.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>daemons</artifactId>
+            <groupId>com.redshape</groupId>
+            <version>${as.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>core</artifactId>
+            <groupId>ru.nikita.platform.sms</groupId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>ui</artifactId>
+            <groupId>com.redshape</groupId>
+            <version>${as.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

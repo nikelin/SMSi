@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<plugin>
+    <archVersion>3.0.0</archVersion>
+    <publisher>
+        <title>Redshape Ltd.</title>
+        <contact type="email">self@nikelin.ru</contact>
+        <contact type="phone">+7.9263315240</contact>
+    </publisher>
+    <authority>
+        <issuer>Nikita Mobile Ltd.</issuer>
+        <expiresOn>12/11</expiresOn>
+        <signedContent></signedContent>
+    </authority>
+    <packageDescription>
+        <mainClass>ru.nikita.platform.sms.plugin.server.ServerPlugin</mainClass>
+        <permissions>
+            <permission type="java.net.SocketPermission">
+                <parameter>*</parameter>
+                <parameter>accept, listen, connect</parameter>
+            </permission>
+            <permission type="java.io.FilePermission">
+                <parameter>*.log</parameter>
+                <parameter>read,write,delete</parameter>
+            </permission>
+            <permission type="javax.net.ssl.SSLPermission">
+                <parameter>*</parameter>
+            </permission>
+        </permissions>
+        <constraint>
+            <parameters>
+                <parameter name="host" required="true" type="java.lang.String">
+                    <validate class="com.redshape.validators.impl.common.NotEmptyValidator"/>
+                    <validate class="com.redshape.validators.impl.common.URLValidator"/>
+                </parameter>
+                <parameter name="port" required="true" type="java.lang.Integer">
+                    <validate class="com.redshape.validators.impl.common.NotEmptyValidator"/>
+                    <validate class="com.redshape.validators.impl.common.NumericStringValidator"/>
+                </parameter>
+                <parameter name="path" required="true" type="java.lang.String">
+                    <validate class="com.redshape.validators.impl.common.NotEmptyValidator"/>
+                    <validate class="com.redshape.validators.impl.common.NumericStringValidator"/>
+                </parameter>
+            </parameters>
+        </constraint>
+    </packageDescription>
+</plugin>

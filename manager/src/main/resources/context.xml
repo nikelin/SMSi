@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <context:component-scan base-package="com.redshape, ru.nikita"/>
+
+    <bean id="contextHandler" class="ru.nikita.platform.sms.utils.ContextHandler"/>
+    
+    <bean id="resourcesLoader" class="com.redshape.utils.ResourcesLoader"/>
+    
+    <bean id="xmlHelper" class="com.redshape.utils.helpers.XMLHelper">
+        <constructor-arg><ref bean="resourcesLoader"/></constructor-arg>
+    </bean>
+
+    <bean id="config" class="com.redshape.utils.config.XMLConfig">
+        <constructor-arg>
+            <ref bean="xmlHelper"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="java.lang.String">
+                <constructor-arg><value>src/main/resources/config.xml</value></constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="objectsLoader" class="com.redshape.utils.serializing.binary.BinaryLoader"/>
+
+    <bean id="objectsFlusher" class="com.redshape.utils.serializing.binary.BinaryFlusher"/>
+    
+    <bean id="jobsManager" class="com.redshape.daemon.jobs.managers.JobsManager">
+        <property name="handlers">
+            <map>
+                <entry>
+                    <key><value type="java.lang.Class">ru.nikita.platform.sms.jobs.processors.RegisterProcessorJob</value></key>
+                    <bean class="ru.nikita.platform.sms.handlers.RegisterProcessorHandler"/>
+                </entry>
+                <entry>
+                    <key><value type="java.lang.Class">ru.nikita.platform.sms.jobs.providers.RegisterProviderJob</value></key>
+                    <bean class="ru.nikita.platform.sms.handlers.RegisterProviderHandler"/>
+                </entry>
+                <entry>
+                    <key><value type="java.lang.Class">ru.nikita.platform.sms.jobs.processors.BindProcessorJob</value></key>
+                    <bean class="ru.nikita.platform.sms.handlers.BindProcessorHandler"/>
+                </entry>
+                <entry>
+                    <key><value type="java.lang.Class">ru.nikita.platform.sms.jobs.providers.StartProviderJob</value></key>
+                    <bean class="ru.nikita.platform.sms.handlers.StartProviderJobHandler"/>
+                </entry>
+                <entry>
+                    <key><value type="java.lang.Class">ru.nikita.platform.sms.jobs.providers.StopProviderJob</value></key>
+                    <bean class="ru.nikita.platform.sms.handlers.StopProviderHandler"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="queuesRegistry" class="ru.nikita.platform.sms.queue.StandardQueueRegistry">
+        <constructor-arg>
+            <list>
+                <bean class="ru.nikita.platform.sms.listeners.MessagesProcessor"/>
+            </list>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="processorsRegistry" class="ru.nikita.platform.sms.processors.StandardProcessorsRegistry">
+        <constructor-arg>
+            <list>
+                <bean class="ru.nikita.platform.sms.listeners.RegistryRestorationListener">
+                    <constructor-arg><ref bean="objectsLoader"/></constructor-arg>
+                    <constructor-arg><ref bean="objectsFlusher"/></constructor-arg>
+                    <property name="tmpPath">
+                        <value>/tmp</value>
+                    </property>
+                    <property name="liveFlush"><value type="boolean">true</value></property>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="ascriptEvaluator" class="com.redshape.ascript.evaluation.ExpressionEvaluator"/>
+    
+    <bean id="namedProcessorsRegistry" class="ru.nikita.platform.sms.processors.StandardNamedProcessorsRegistry">
+        <property name="processors">
+            <map>
+                <entry>
+                    <key><value>mz</value></key>
+                    <bean class="ru.nikita.platform.sms.processors.impl.MZProcessor"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="providersRegistry" class="ru.nikita.platform.sms.providers.StandardProvidersRegistry">
+        <constructor-arg>
+            <list>
+                <bean class="ru.nikita.platform.sms.listeners.RegistryRestorationListener">
+                    <constructor-arg><ref bean="objectsLoader"/></constructor-arg>
+                    <constructor-arg><ref bean="objectsFlusher"/></constructor-arg>
+                    <property name="tmpPath">
+                        <value>/tmp</value>
+                    </property>
+                    <property name="liveFlush"><value type="boolean">true</value></property>
+                </bean>
+                <bean class="ru.nikita.platform.sms.listeners.ProviderListener">
+                    <constructor-arg>
+                        <ref bean="queuesRegistry"/>
+                    </constructor-arg>
+                    <property name="cascadeInterceptors">
+                        <list>
+                            <bean class="ru.nikita.platform.sms.listeners.CDRListener"/>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="kernelsRegistry" class="ru.nikita.platform.sms.manager.kernels.StandardKernelsRegistry">
+        <constructor-arg>
+            <list>
+                <bean class="ru.nikita.platform.sms.listeners.RegistryRestorationListener">
+                    <constructor-arg><ref bean="objectsLoader"/></constructor-arg>
+                    <constructor-arg><ref bean="objectsFlusher"/></constructor-arg>
+                    <property name="tmpPath">
+                        <value>/tmp</value>
+                    </property>
+                    <property name="liveFlush"><value type="boolean">true</value></property>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="bindingsRegistry" class="ru.nikita.platform.sms.bind.StandardBindedPairsRegistry">
+        <constructor-arg>
+            <list>
+                <bean class="ru.nikita.platform.sms.listeners.RegistryRestorationListener">
+                    <constructor-arg><ref bean="objectsLoader"/></constructor-arg>
+                    <constructor-arg><ref bean="objectsFlusher"/></constructor-arg>
+                    <property name="tmpPath">
+                        <value>/tmp</value>
+                    </property>
+                    <property name="liveFlush"><value type="boolean">true</value></property>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+    
+</beans>

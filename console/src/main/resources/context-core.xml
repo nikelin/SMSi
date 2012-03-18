@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <bean id="hasher" class="com.redshape.utils.hashers.MD5" scope="singleton"/>
+
+    <bean id="objectsClonner" class="com.redshape.utils.clonners.DeepClonner" scope="singleton"/>
+
+    <bean id="config" class="com.redshape.utils.config.XMLConfig" scope="singleton">
+        <constructor-arg><ref bean="xmlHelper"/></constructor-arg>
+        <constructor-arg value="src/main/resources/config.xml"/>
+    </bean>
+
+</beans>

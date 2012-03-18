@@ -1,0 +1,21 @@
+(:include "src/main/resources/aps/utils.aps")
+
+(:import "ru.nikita.platform.sms.jobs.messages.SendMessageJob" sendJob )
+
+(:define bind (:list host port login password)
+    (begin
+        () ) )
+
+(:define send-test-message (:list server-id number text)
+    (begin
+        (:when
+            (:list (eq (len #text) 0) (notify "Text must not be empty!") )
+            (:list (eq (len #number) 0) (notify "Number must not be empty!") )
+            (:list (not (is-number #number) ) (notify "Number has invalid format!") )
+            (:list (> (length #text) 140) (notify "Message most be less than 140 symbols!") )
+            (begin
+                (:set job (:new sendJob) )
+                (job.setPhone #number)
+                (job.setText #text)
+                (schedule-job #server-id #job) )
+                    ) ) )

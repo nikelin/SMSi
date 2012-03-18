@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!-- Move to spring context -->
+<config>
+    <server>
+        <host>192.168.0.64</host>
+        <port>55095</port>
+        <path>KernelManager</path>
+    </server>
+	<ui>
+        <components>
+            <component>
+                <class>ru.nikita.platform.sms.console.components.console.ConsoleComponent</class>
+            </component>
+            <component>
+                <class>ru.nikita.platform.sms.console.components.main.MainComponent</class>
+            </component>
+            <component>
+                <class>ru.nikita.platform.sms.console.components.providers.ProvidersComponent</class>
+            </component>
+            <component>
+                <class>ru.nikita.platform.sms.console.components.processors.ProcessorsComponent</class>
+            </component>
+            <component>
+                <class>ru.nikita.platform.sms.console.components.servers.ServersComponent</class>
+            </component>
+            <component>
+                <class>ru.nikita.platform.sms.console.components.plugins.PluginsComponent</class>
+            </component>
+            <component>
+                <class>ru.nikita.platform.sms.console.components.bindings.BindingsComponent</class>
+            </component>
+        </components>
+	</ui>
+    <interceptors>
+        <interceptor>
+            <signal>Core.Init</signal>
+            <class>ru.nikita.platform.sms.console.interceptors.StartInterceptor</class>
+        </interceptor>
+    </interceptors>
+</config>

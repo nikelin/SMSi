@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="resourcesLoader" class="com.redshape.utils.ResourcesLoader"/>
+    
+    <bean id="xmlHelper" class="com.redshape.utils.helpers.XMLHelper">
+        <constructor-arg><ref bean="resourcesLoader"/></constructor-arg>
+    </bean>
+    
+    <bean id="config" class="com.redshape.utils.config.XMLConfig">
+        <constructor-arg>
+            <ref bean="xmlHelper"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="java.lang.String">
+                <constructor-arg><value>src/main/resources/config.xml</value></constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="jobsManager" class="com.redshape.daemon.jobs.managers.JobsManager">
+        <property name="handlers">
+            <map>
+                <entry>
+                    <key><value type="java.lang.Class">ru.nikita.platform.sms.jobs.processors.RegisterProcessorJob</value></key>
+                    <bean class="ru.nikita.platform.sms.handlers.RegisterProcessorHandler"/>
+                </entry>
+                <entry>
+                    <key><value type="java.lang.Class">ru.nikita.platform.sms.jobs.providers.RegisterProviderJob</value></key>
+                    <bean class="ru.nikita.platform.sms.handlers.RegisterProviderHandler"/>
+                </entry>
+                <entry>
+                    <key><value type="java.lang.Class">ru.nikita.platform.sms.jobs.processors.BindProcessorJob</value></key>
+                    <bean class="ru.nikita.platform.sms.handlers.BindProcessorHandler"/>
+                </entry>
+                <entry>
+                    <key><value type="java.lang.Class">ru.nikita.platform.sms.jobs.providers.StartProviderJob</value></key>
+                    <bean class="ru.nikita.platform.sms.handlers.StartProviderJobHandler"/>
+                </entry>
+                <entry>
+                    <key><value type="java.lang.Class">ru.nikita.platform.sms.jobs.providers.StopProviderJob</value></key>
+                    <bean class="ru.nikita.platform.sms.handlers.StopProviderHandler"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="queuesRegistry" class="ru.nikita.platform.sms.queue.StandardQueueRegistry"/>
+    
+    <bean id="processorsRegistry" class="ru.nikita.platform.sms.processors.StandardProcessorsRegistry">
+    </bean>
+    
+    <bean id="providersRegistry" class="ru.nikita.platform.sms.providers.StandardProvidersRegistry">
+        <constructor-arg>
+            <ref bean="config"/>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="bindingsRegistry" class="ru.nikita.platform.sms.bind.StandardBindedPairsRegistry"/>
+    
+</beans>

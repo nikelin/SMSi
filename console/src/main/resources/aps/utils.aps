@@ -1,0 +1,43 @@
+(:import com.redshape.ui.utils.UIRegistry)
+(:import java.lang.String String)
+(:set notificationManager registry.getNotificationsManager() )
+(:set managerService (:lambda (:list) (begin (UIRegistry.get "App.Attributes.Manager" ) ) ) )
+
+(:define len (:list value)
+    (begin
+        (:set str (String.valueOf #value) )
+        ((#str.length)) ) )
+
+(:define info (:list text)
+    (notify error #text ) )
+
+(:define warn (:list text)
+    (notify warn #text ) )
+
+(:define error (:list text)
+    (notify error #text) )
+
+(:define notify (:list level text)
+    (:when
+        (:list (eq #level "error") (notificationManager.error #text ) )
+        (:list (eq #level "warn" ) (notificationManager.warn #text ) )
+        (:list (eq #level "info" ) (notificationManager.info #text) ) ) )
+
+(:define list-servers (:list)
+    (begin
+        (
+            (:set manager (managerService) )
+            (:when
+                (:list (eq #manager null) (error "Manager service not defined!") )
+                (:list
+                    (manager.list) ) ) ) ) )
+
+
+(:define schedule-job (:list server-id job)
+    (begin
+        (
+            (:set manager (managerService) )
+            (:when
+                (:list (eq #manager null) (error "Manager service not defined!") )
+                (manager.scheduleJob #server-id #job ) ) ) )
+        )
